@@ -1,22 +1,115 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.37
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Counting_Sort", "Counting_Sort\Counting_Sort.csproj", "{D7DE2CB9-85B2-45BD-8DA8-9FE72B8AD2E2}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D7DE2CB9-85B2-45BD-8DA8-9FE72B8AD2E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7DE2CB9-85B2-45BD-8DA8-9FE72B8AD2E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7DE2CB9-85B2-45BD-8DA8-9FE72B8AD2E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7DE2CB9-85B2-45BD-8DA8-9FE72B8AD2E2}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-EndGlobal
+ class Program
+    {
+        static void Main(string[] args)
+        {
+            CountSort List = new CountSort();
+
+            List.readData("count.txt");
+
+            List.ArrayOfCount();
+
+            Console.ReadLine();
+
+        }
+    }
+    
+     class CountSort
+    {
+        ArrayList GivenList;
+        ArrayList count = new ArrayList();
+        int[] FinalList;
+
+        public CountSort()
+        {
+            GivenList = new ArrayList();
+
+        }
+
+        public void readData(string Filename)
+        {
+            StreamReader Input = new StreamReader(Filename);
+            while (!Input.EndOfStream)
+            {
+                string[] data = Input.ReadLine().Split(';');
+                GivenList.Add(int.Parse(data[0]));
+            }
+            Input.Close();
+        }
+
+
+        public int getMax()
+        {
+            int max = -99;
+            int index = 0;
+            int Values = (int)GivenList[index];
+
+            while (index < GivenList.Count-1)
+            {
+                if (max < Values)
+                {
+                    max = Values;
+                    index = index + 1;
+                }
+                else
+                {
+                    index = index + 1;
+                }
+                Values = (int)GivenList[index];
+            }
+
+            return max;
+           
+        }
+
+        public void ArrayOfCount()
+        {
+            int n = GivenList.Count;
+            int nrEl = 0;
+            int k = getMax();
+
+            FinalList = new int[n];
+
+
+            int val = 0;
+            while (nrEl <= k)
+            {
+                count.Add(val);
+                nrEl++;
+            }
+
+ 
+            int number;
+            for (int x = 0; x <= GivenList.Count-1; x++)
+            {
+                number = (int)GivenList[x];
+                count[number] = (int)count[number] + 1;
+            }
+
+            for (int i = 1; i <= count.Count-1; i++)
+            {
+                count[i] = (int)count[i] + (int)count[i - 1];
+            }
+
+            int point;
+            int putin;
+            for (int y = GivenList.Count - 1; y >= 0; y--)
+            {
+                point = (int)count[(int)GivenList[y]] - 1;
+                
+                count[(int)GivenList[y]] = point;
+
+                putin = (int)count[(int)GivenList[y]];
+
+                FinalList[putin] = (int)GivenList[y];
+
+                
+            }
+
+
+
+            for (int i = 0; i <= FinalList.Length-1; i++)
+            {
+                Console.Write("{0} ",(int)FinalList[i]);
+            }
+        }
+    }
